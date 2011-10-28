@@ -10,12 +10,12 @@
  * Module dependencies
  */
 
-var utils = require('duality/utils'),
+var utils = require('./utils'),
     db = require('db'),
-    fields = require('kanso/fields'),
-    fieldset = require('kanso/fieldset'),
-    widgets = require('kanso/widgets'),
-    permissions = require('kanso/permissions'),
+    fields = require('couchtypes/fields'),
+    fieldset = require('couchtypes/fieldset'),
+    widgets = require('couchtypes/widgets'),
+    permissions = require('couchtypes/permissions'),
     _ = require('underscore')._;
 
 
