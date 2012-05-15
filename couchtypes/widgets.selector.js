@@ -199,11 +199,11 @@ exports.documentSelector = function (_options) {
             this.discoverSelectionElement(container_elt);
 
         var appdb = db.use(options.db || duality ? duality.getDBURL(): '/');
+
         appdb.getView(
             options.appname || settings.name,
             options.viewName,
             { include_docs: options.storeEntireDocument },
-            { useCache: true, db: options.db, appName: options.appName },
 
             utils.bindContext(this, function (err, rv) {
                 /* Error handling for getView */
