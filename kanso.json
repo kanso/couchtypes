@@ -11,7 +11,8 @@
         "sanitize": ">=0.0.8",
         "events": null,
         "session": null,
-        "querystring": null
+        "querystring": null,
+        "settings": null
     },
     "postprocessors": {
         "remove_property": "build/remove_property"
