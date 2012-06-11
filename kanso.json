@@ -9,7 +9,8 @@
         "underscore": null,
         "db": ">=0.0.8",
         "sanitize": ">=0.0.8",
-        "events": null
+        "events": null,
+        "session": null
     },
     "postprocessors": {
         "remove_property": "build/remove_property"
