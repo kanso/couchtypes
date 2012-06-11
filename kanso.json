@@ -10,7 +10,8 @@
         "db": ">=0.0.8",
         "sanitize": ">=0.0.8",
         "events": null,
-        "session": null
+        "session": null,
+        "querystring": null
     },
     "postprocessors": {
         "remove_property": "build/remove_property"
