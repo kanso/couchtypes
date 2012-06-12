@@ -223,7 +223,8 @@ Type.prototype.create = function (userCtx, callback) {
 exports.validate_doc_update = function (types, newDoc, oldDoc, userCtx) {
     if (oldDoc) {
         if (oldDoc.type !== newDoc.type &&
-            (types[oldDoc.type] || types[newDoc.type])) {
+            (types[oldDoc.type] || types[newDoc.type]) &&
+            !newDoc._deleted) {
             throw {forbidden: 'Cannot change "type" property'};
         }
     }
