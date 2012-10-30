@@ -160,7 +160,7 @@ function (module, exports, events, sanitize, _) {
      */
 
     exports.classes = function (field, errors) {
-        var r = ['field'];
+        var r = ['control-group'];
         if (errors && errors.length) {
             r.push('error');
         }
@@ -180,7 +180,7 @@ function (module, exports, events, sanitize, _) {
      */
 
     exports.defaultRenderer = function () {
-        return exports.div;
+        return exports.bootstrap;
     };
 
 
@@ -190,7 +190,7 @@ function (module, exports, events, sanitize, _) {
      *  provide depth information (with the aim of simplifying CSS rules).
      *  See style.css for details on how to style this output.
      */
-    exports.div = function () {
+    exports.bootstrap = function () {
         /**
          * Constructor for renderer; initializes object. The string returned
          * from this function is prepended to the form's markup.
@@ -201,11 +201,12 @@ function (module, exports, events, sanitize, _) {
             this.depth = 0;
             var html = '<div class="render render-div">';
             if (errs && errs.length) {
-                html += '<ul class="errors">';
+                html += '<div class="errors">';
                 _.each(errs, function (e) {
-                    html += '<li>' + (e.message || e.toString()) + '</li>';
+                    html += '<div class="alert alert-error">' +
+                        (e.message || e.toString()) + '</div>';
                 });
-                html += '</ul>';
+                html += '</div>';
             }
             return html;
         };
@@ -284,21 +285,18 @@ function (module, exports, events, sanitize, _) {
             return (
                 '<div class="' +
                     exports.classes(field, errors).join(' ') + '">' +
-                    '<div class="form-label">' +
+                    '<div class="control-label">' +
                         exports.labelHTML(field, name, options) +
                         exports.descriptionHTML(field) +
                     '</div>' +
-                    '<div class="form-content">' +
-                        '<div class="inner">' +
-                            field.widget.toHTML(
-                                name, value, raw, field, (options || {})
-                            ) +
-                        '</div>' +
-                        '<div class="hint">' +
-                            exports.hintHTML(field) +
-                        '</div>' +
-                        '<div class="errors">' +
-                            exports.errorHTML(errors) +
+                    '<div class="controls">' +
+                        field.widget.toHTML(
+                            name, value, raw, field, (options || {})
+                        ) +
+                        '<div class="help-inline">' +
+                            ((errors && errors.length) ?
+                                exports.errorHTML(errors):
+                                exports.hintHTML(field)) +
                         '</div>' +
                         '<div class="clear"></div>' +
                     '</div>' +
