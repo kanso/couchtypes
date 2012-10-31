@@ -59,15 +59,15 @@ function (module, exports, events, sanitize, _) {
 
     exports.errorHTML = function (errors) {
         if (errors && errors.length) {
-            var html = '<ul class="errors right">';
+            var html = '<div class="errors">';
             for (var i = 0; i < errors.length; i++) {
                 html += (
-                    '<li class="error_msg">' +
+                    '<div class="error-msg">' +
                         h(errors[i].message || errors[i].toString()) +
-                    '</li>'
+                    '</div>'
                 );
             }
-            html += '</ul>';
+            html += '</div>';
             return html;
         }
         return '';
