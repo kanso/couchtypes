@@ -11,9 +11,10 @@ define([
     'exports',
     './sanitize',
     './session',
+    './db',
     'underscore'
 ],
-function (exports, sanitize, session, _) {
+function (exports, sanitize, session, db, _) {
 
 
     var h = sanitize.escapeHtml;
@@ -263,6 +264,67 @@ function (exports, sanitize, session, _) {
     };
 
     /**
+     * Creates a new embed widget
+     *
+     * Required options:
+     *   type   - the Type definition to embed
+     *   db     - the db
+     *   app    - the design doc
+     *   view   - the view for listing available docs to embed
+     *   query  - parameters to pass to the view
+     *   label_field - the doc property to display
+     *
+     * @name embed(options)
+     * @param options
+     * @returns {Widget Object}
+     * @api public
+     */
+
+    exports.embed = function (woptions) {
+        var w = new Widget('embed', woptions);
+        w.toHTML = function (name, value, raw, field, options) {
+            var id = 'field_' + name;
+            var hidden_id = id + '_hidden';
+            return '<input value="' + h(raw) + '" ' +
+                          'name="' + h(name) +'" ' +
+                          'id="' + h(hidden_id) +'" ' +
+                          'type="hidden" />' +
+                   '<select id="' + h(id) + '"></select>';
+        };
+        w.clientInit = function (field, path, value, raw, errors, options) {
+            var name = path.join('_');
+            var id = 'field_' + name;
+            var app = woptions.app;
+            var view = woptions.view;
+            var q = woptions.query;
+            q.include_docs = true;
+
+            db.use(woptions.db).getView(app, view, q, function (err, data) {
+                var docs = _.reduce(data.rows, function (docs, row) {
+                    docs[row.id] = row.doc;
+                    return docs;
+                }, {});
+
+                var el = $('#' + id);
+                for (var i = 0; i < data.rows.length; i++) {
+                    var doc = data.rows[i].doc;
+                    el.append(
+                        '<option value="' + h(doc._id) + '">' +
+                            h(doc[woptions.label_field]) +
+                        '</option>'
+                    );
+                }
+                el.change(function (ev) {
+                    var doc = docs[el.val()];
+                    $('[name="' + name + '"]').val(JSON.stringify(doc));
+                });
+                el.change();
+            });
+        };
+        return w;
+    };
+
+    /**
      * Creates a new text input widget.
      *
      * @name text([options])
@@ -397,7 +459,7 @@ function (exports, sanitize, session, _) {
 
     /**
      * Creates a new computed widget. Computed widgets display a string, but are
-     * uneditable, working as a hidden field behind the scenes.
+     * uneditable, working as a disabled field.
      *
      * @name computed([options])
      * @param options
@@ -414,12 +476,10 @@ function (exports, sanitize, session, _) {
             if (raw === null || raw === undefined) {
                 raw = '';
             }
-            var html = '<div id="';
-            html += this._id(name, options.offset, options.path_extra) + '">';
-            html += '<input type="hidden" value="' + h(raw) + '"';
+            var html = '<input id="';
+            html += this._id(name, options.offset, options.path_extra) + '"';
+            html += ' readonly type="text" value="' + h(raw) + '"';
             html += ' name="' + this._name(name, options.offset) + '" />';
-            html += '<span>' + h(raw) + '</span>';
-            html += '</div>';
             return html;
         };
         return w;

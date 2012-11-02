@@ -712,10 +712,11 @@ function (exports, permissions, validators, widgets, utils, _) {
         else {
             p.update = permissions.fieldUneditable();
         }
-        return exports.number(_.defaults(options, {
+        return exports.string(_.defaults(options, {
+            // TODO: use regexp to test if ISO date string is valid?
             widget: widgets.computed(),
             default_value: function (req) {
-                return new Date().getTime();
+                return utils.ISODateString()
             }
         }));
     };
@@ -783,19 +784,22 @@ function (exports, permissions, validators, widgets, utils, _) {
     /**
      * Creates an Embedded Field
      *
-     * Required option: type - the Type definition to embed
+     * Required options:
+     *   type - the Type definition to embed
+     *   db     - the db
+     *   app    - the design doc
+     *   view   - the view for listing available docs to embed
+     *   query  - parameters to pass to the view
+     *   label_field - the doc property to display
      *
-     * @name embed([options])
+     * @name embed(options)
      * @param {Object} options
      * @api public
      */
 
     exports.embed = function (options) {
         return new Embedded(_.defaults((options || {}), {
-            widget: widgets.embedList({
-                singleton: true,
-                widget: widgets.defaultEmbedded()
-            })
+            widget: widgets.embed(options)
         }));
     };
 

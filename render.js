@@ -265,6 +265,7 @@ function (module, exports, events, sanitize, _) {
             var name = path.join('.');
             var caption = path.slice(this.depth).join(' ');
 
+
             exports.once('renderFinish', function () {
                 if (field.widget.clientInit) {
                     setTimeout(function () {
