@@ -927,4 +927,18 @@ function (exports, permissions, validators, widgets, utils, _) {
         return new exports.AttachmentField(options);
     };
 
+    /**
+     * Used to define sub-groups which require label properties
+     * (usually for i18n)
+     */
+
+    var Group = exports.Group = function Group(options) {
+        this.label = options.label;
+        this.fields = options.fields;
+    };
+
+    exports.group = function (options) {
+        return new Group(options);
+    };
+
 });

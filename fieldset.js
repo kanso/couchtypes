@@ -61,6 +61,11 @@ function (exports, utils, fields_module, _) {
                     }
                 }
             }
+            else if (f instanceof fields_module.Group) {
+                result[k] = exports.createDefaults(
+                    f.fields, req, doc || result, path.concat([k])
+                );
+            }
             else if (f instanceof Object) {
                 result[k] = exports.createDefaults(
                     f, req, doc || result, path.concat([k])
@@ -137,6 +142,9 @@ function (exports, utils, fields_module, _) {
 
         return _.reduce(keys, function (errs, k) {
             var f = fields[k];
+            if (f instanceof fields_module.Group) {
+                f = f.fields;
+            }
             if (f === undefined) {
                 // Extra value with no associated field detected
                 if (!extra) {
@@ -216,6 +224,10 @@ function (exports, utils, fields_module, _) {
         nVal = nVal || {};
         oVal = oVal || {};
         f = f || {};
+
+        if (f instanceof fields_module.Group) {
+            f = f.fields;
+        }
 
         // Expecting sub-object, not a value
         // This *should* be picked up by validation, and be raised as a

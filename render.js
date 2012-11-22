@@ -221,16 +221,19 @@ function (module, exports, events, sanitize, _) {
          *
          * @param {Array} path
         */
-        this.beginGroup = function (path) {
+        this.beginGroup = function (path, label) {
             this.depth += 1;
             var name = _.last(path);
+            if (!label) {
+                label = h(
+                    name.substr(0, 1).toUpperCase() +
+                    name.substr(1).replace(/_/g, ' ')
+                );
+            }
             var css_class = 'clear group level-' + this.depth;
             return (
                 '<fieldset class="' + h(css_class) + '">' +
-                '<legend>' +
-                    h(name.substr(0, 1).toUpperCase() +
-                        name.substr(1).replace(/_/g, ' ')) +
-                '</legend>'
+                '<legend>' + label + '</legend>'
             );
         };
 

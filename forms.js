@@ -527,8 +527,16 @@ function (exports, utils, types, fieldset, fields_module, render, _) {
                     (options || {})
                 );
             }
-            else if (f instanceof Object) {
-                return html + (k ? renderer.beginGroup(f_path) : '') +
+            else if (f instanceof fields_module.Group ||
+                     f instanceof Object) {
+
+                var label = null;
+                if (f instanceof fields_module.Group) {
+                    label = f.label;
+                    f = f.fields;
+                }
+                return html +
+                    (k ? renderer.beginGroup(f_path, label) : '') +
                     that.renderFields(
                         renderer,
                         f,
@@ -645,6 +653,9 @@ function (exports, utils, types, fieldset, fields_module, render, _) {
                 if (!doc[k].length && f.omit_empty) {
                     delete doc[k];
                 }
+            }
+            else if (f instanceof fields_module.Group) {
+                doc[k] = exports.parseRaw(f.fields, r, root, f_path);
             }
             else if (f instanceof Object) {
                 doc[k] = exports.parseRaw(f, r, root, f_path);
