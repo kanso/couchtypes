@@ -167,7 +167,7 @@ define(['exports', 'underscore'], function (exports, _) {
     exports.generateDomIdentifier = exports.id = function (/* ... */) {
         return exports.generateAbstractIdentifier(
             [ 'id' ], arguments, function (x) {
-                return ('' + x).replace(/[^A-Za-z0-9_]+/, '_');
+                return ('' + x).replace(/[^A-Za-z0-9_]+/g, '_');
             }, function (x) {
                 return x.join('_');
             }
@@ -188,7 +188,7 @@ define(['exports', 'underscore'], function (exports, _) {
     exports.generateDomName = exports.name = function (/* ... */) {
         return exports.generateAbstractIdentifier(
             [ ], arguments, function (x) {
-                return ('' + x).replace(/[\'\"]+/, '_');
+                return ('' + x).replace(/[\'\"]+/g, '_');
             }, function (x) {
                 return x.join('.');
             }
