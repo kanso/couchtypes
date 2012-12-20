@@ -157,12 +157,25 @@ function (exports, utils, _) {
      * @api public
      */
 
-    exports.all = function (perms) {
+    exports.all = function (/*opt*/msg, perms) {
+        if (!perms) {
+            perms = msg;
+            msg = null;
+        }
         return function () {
             var args = arguments;
-            return _.reduce(perms, function (errs, p) {
+            var errs = _.reduce(perms, function (errs, p) {
                 return errs.concat(utils.getErrors(p, args));
             }, []);
+            if (errs.length && msg) {
+                // if a custom message is defined, return a
+                // single error with that message
+                var err = new Error(msg);
+                err.field = errs[0].field;
+                err.has_field = errs[0].has_field;
+                return [err];
+            }
+            return errs;
         };
     };
 
@@ -175,7 +188,11 @@ function (exports, utils, _) {
      * @api public
      */
 
-    exports.any = function (perms) {
+    exports.any = function (/*optional*/msg, perms) {
+        if (!perms) {
+            perms = msg;
+            msg = null;
+        }
         return function () {
             var errs = [];
             for (var i = 0, len = perms.length; i < len; i++) {
@@ -191,6 +208,14 @@ function (exports, utils, _) {
                     // store the first error to re-throw if none pass
                     errs.push(e);
                 }
+            }
+            if (errs.length && msg) {
+                // if a custom message is defined, return a
+                // single error with that message
+                var err = new Error(msg);
+                err.field = errs[0].field;
+                err.has_field = errs[0].has_field;
+                return [err];
             }
             return errs;
         };
