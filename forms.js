@@ -249,7 +249,8 @@ function (exports, utils, types, fieldset, fields_module, render, _) {
         );
 
         this.errors = fieldset.validate(
-            this.fields, this.values, this.values, this.raw, [], false
+            this.fields, this.values, this.values, this.raw, [],
+            (this.type ? this.type.allow_extra_fields: false)
         );
 
         if (this.type) {
