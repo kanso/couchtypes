@@ -1,7 +1,7 @@
 {
     "name": "couchtypes",
     "description": "Provides a flexible schema and form-generation system for describing and validating JSON documents in CouchDB",
-    "version": "0.0.19",
+    "version": "0.0.20",
     "categories": ["Validation", "UI"],
     "jam": {
         "main": "types.js",
