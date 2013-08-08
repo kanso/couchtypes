@@ -120,6 +120,22 @@ Widget.prototype._stringify_value = function (value)
     return rv;
 };
 
+Widget.prototype._htmlClasses = function () {
+	html = "";
+	if ('classes' in this.options) {
+		html += ' class="';
+		for (var cn=0; cn<this.options.classes.length;cn++) {
+			if (cn > 0) {
+				html += " ";
+			}
+			html += this.options.classes[cn];
+		}
+		html += '"';
+		return html;
+	}
+};
+
+
 /**
  * Converts a widget to HTML using the provided name and parsed and raw values
  *
@@ -159,6 +175,7 @@ Widget.prototype.toHTML = function (name, value, raw, field, options) {
     if ('readonly' in this.options) {
         html += ' readonly="' + h(this.options.readonly) + '"';
     }
+	html += this._htmlClasses();
     return html + ' />';
 };
 
@@ -328,6 +345,7 @@ exports.textarea = function (_options) {
         if (this.options.hasOwnProperty('rows')) {
             html += ' rows="' + h(this.options.rows) + '"';
         }
+		html += this._htmlClasses();
         html += '>' + h(raw);
         html += '</textarea>';
         return html;
@@ -351,6 +369,7 @@ exports.checkbox = function (_options) {
         html += ' name="' + this._name(name, options.offset) + '" id="';
         html += this._id(name, options.offset, options.path_extra) + '"';
         html += (value ? ' checked="checked"': '');
+		html += this._htmlClasses();
         return (html + ' />');
     };
     return w;
@@ -375,7 +394,7 @@ exports.select = function (_options) {
 
         var html = '<select';
         html += ' name="' + this._name(name, options.offset) + '" id="';
-        html += this._id(name, options.offset, options.path_extra) + '">';
+        html += this._id(name, options.offset, options.path_extra) + this._htmlClasses() + '">';
 
         for (var i = 0; i < this.values.length; i++) {
             var opt = this.values[i];
@@ -415,6 +434,7 @@ exports.computed = function (_options) {
         var html = '<div id="';
         html += this._id(name, options.offset, options.path_extra) + '">';
         html += '<input type="hidden" value="' + h(raw) + '"';
+		html += this._htmlClasses();
         html += ' name="' + this._name(name, options.offset) + '" />';
         html += '<span>' + h(raw) + '</span>';
         html += '</div>';
@@ -507,7 +527,7 @@ exports.file = function (options) {
         }
         html += '</ul>';
 
-        html += '<input type="file" />';
+        html += '<input type="file" ' + this._htmlClasses + '/>';
         html += '</div>';
         return html;
     };
